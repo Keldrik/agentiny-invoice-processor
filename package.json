@@ -1,0 +1,29 @@
+{
+  "name": "agentiny-invoice-processor",
+  "version": "1.0.0",
+  "description": "Intelligent invoice processing agent using @agentiny framework",
+  "type": "module",
+  "main": "invoice-processor.ts",
+  "scripts": {
+    "start": "tsx invoice-processor.ts",
+    "dev": "tsx watch invoice-processor.ts"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "invoice",
+    "document-intelligence",
+    "automation",
+    "typescript"
+  ],
+  "dependencies": {
+    "@agentiny/core": "latest",
+    "@agentiny/anthropic": "latest",
+    "@anthropic-ai/sdk": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
