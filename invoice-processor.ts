@@ -218,7 +218,7 @@ Return ONLY valid JSON (no markdown):
         const result = JSON.parse(cleaned);
         state.anomalies = result.anomalies;
         
-        if (state.anomalies.length > 0) {
+        if (state.anomalies && state.anomalies.length > 0) {
           state.status = 'flagged';
           console.log('⚠ Anomalies detected:', state.anomalies.length);
         } else {
@@ -337,7 +337,7 @@ Payment Due: Net 30
   });
   
   // Wait for processing to complete
-  await new Promise(resolve => setTimeout(resolve, 15000)); // Give Claude time to process
+  await invoiceAgent.settle(); // Wait until all actions are processed
   
   // Display results
   const finalState = invoiceAgent.getState();
