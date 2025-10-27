@@ -17,6 +17,7 @@ All of this happens **automatically** through a reactive pipeline - once you fee
 ## Why This Matters
 
 Traditional document processing requires:
+
 - Manual orchestration of AI calls
 - Complex state management
 - Error-prone step coordination
@@ -66,15 +67,18 @@ The beauty? You just set `documentContent` and the entire pipeline executes auto
 Each action uses Claude to perform intelligent analysis:
 
 ```typescript
-const extractDataAction = createAnthropicAction({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-  model: 'claude-sonnet-4-5',
-}, {
-  prompt: (state) => `Extract structured data from: ${state.documentContent}`,
-  onResponse: (response, state) => {
-    state.extractedData = JSON.parse(response);
+const extractDataAction = createAnthropicAction(
+  {
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+    model: "claude-sonnet-4-5",
   },
-});
+  {
+    prompt: (state) => `Extract structured data from: ${state.documentContent}`,
+    onResponse: (response, state) => {
+      state.extractedData = JSON.parse(response);
+    },
+  }
+);
 ```
 
 ## Installation & Setup
@@ -93,21 +97,27 @@ npm start
 ## How It Works: Step by Step
 
 ### 1. Data Extraction
+
 Claude analyzes the raw invoice text and extracts:
+
 - Vendor information
 - Invoice number and date
 - Line items with quantities and prices
 - Subtotal, tax, and total
 
 ### 2. Validation
+
 The agent validates extracted data:
+
 - Checks if item totals = quantity × unit price
 - Verifies subtotal = sum of items
 - Confirms total = subtotal + tax
 - Ensures all required fields are present
 
 ### 3. Categorization
+
 Automatically categorizes the expense:
+
 - Office Supplies
 - Travel
 - Meals & Entertainment
@@ -117,7 +127,9 @@ Automatically categorizes the expense:
 - And more...
 
 ### 4. Anomaly Detection
+
 Flags potential issues:
+
 - Unusually high amounts
 - Suspicious round numbers
 - Missing documentation
@@ -125,6 +137,7 @@ Flags potential issues:
 - Validation errors
 
 ### 5. Report Generation
+
 Creates an executive summary suitable for approval workflows.
 
 ## Sample Output
@@ -163,8 +176,8 @@ All Fields Present: ✓
    None detected
 
 📝 Executive Summary:
-ACME Office Supplies provided printer supplies and office materials 
-totaling $222.88. All calculations verified correctly. Standard office 
+ACME Office Supplies provided printer supplies and office materials
+totaling $222.88. All calculations verified correctly. Standard office
 supply expense with no concerns flagged for approval.
 
 Status: completed
@@ -173,21 +186,27 @@ Status: completed
 ## Key Features Demonstrated
 
 ### ✨ Zero Orchestration Code
+
 No manual step coordination. The agent figures out what to do next based on state.
 
 ### 🔄 Fully Reactive
+
 Add data, triggers fire automatically in the correct order.
 
 ### 🎯 Type-Safe
+
 Full TypeScript support with compile-time guarantees.
 
 ### 🚀 Production-Ready
+
 Error handling, validation, and proper state management built-in.
 
 ### 🧩 Composable
+
 Easy to add new stages (duplicate detection, approval routing, etc.).
 
 ### 📊 Observable
+
 Built-in logging shows exactly what's happening at each stage.
 
 ## Extending the Example
@@ -204,18 +223,15 @@ agent.once(
 ### Add Approval Routing
 
 ```typescript
-agent.when(
-  (state) => state.status === 'flagged',
-  [routeToManagerAction]
-);
+agent.when((state) => state.status === "flagged", [routeToManagerAction]);
 ```
 
 ### Add PDF Processing
 
 ```typescript
-import { readPdfText } from 'pdf-parse';
+import { readPdfText } from "pdf-parse";
 
-const pdfPath = 'invoice.pdf';
+const pdfPath = "invoice.pdf";
 const text = await readPdfText(pdfPath);
 agent.setState({ documentContent: text });
 ```
@@ -223,6 +239,7 @@ agent.setState({ documentContent: text });
 ## Real-World Applications
 
 This pattern works for:
+
 - **Contract Analysis** - Extract terms, identify risks
 - **Resume Parsing** - Structure candidate information
 - **Receipt Processing** - Expense tracking automation
@@ -235,6 +252,7 @@ This pattern works for:
 ### Compared to Traditional Approaches
 
 **Without @agentiny:**
+
 ```typescript
 // Manual orchestration
 const extracted = await extract(doc);
@@ -246,6 +264,7 @@ const report = await generate(anomalies);
 ```
 
 **With @agentiny:**
+
 ```typescript
 // Define the flow once
 agent.once(hasDoc, [extract]);
@@ -255,7 +274,7 @@ agent.once(hasValidated, [categorize]);
 
 // Execute
 agent.setState({ documentContent: doc });
-// Everything else happens automatically
+agent.settle();
 ```
 
 ### Advantages
@@ -265,27 +284,6 @@ agent.setState({ documentContent: doc });
 - **Easier Testing**: Each stage tests independently
 - **Better Error Handling**: Centralized error management
 - **Scalable**: Add stages without refactoring
-
-## Blog Post Ideas
-
-### Title Options
-1. "Building Document Intelligence Pipelines with Reactive Agents"
-2. "Zero-Orchestration AI: Processing Invoices with TypeScript Agents"
-3. "From Raw PDFs to Structured Data: An Agent-Based Approach"
-4. "Autonomous Document Processing in 200 Lines of TypeScript"
-
-### Key Talking Points
-- Traditional vs. reactive approaches
-- How triggers eliminate orchestration code
-- Real-world business value
-- Extensibility and composability
-- Production readiness
-
-### Code Snippets to Highlight
-- The trigger setup (shows simplicity)
-- State interface (shows structure)
-- One complete action (shows AI integration)
-- The one-line execution: `setState({ documentContent })`
 
 ## Performance Notes
 
@@ -313,6 +311,7 @@ MIT
 ---
 
 **Built with:**
+
 - [@agentiny/core](https://github.com/Keldrik/agentiny) - Lightweight TypeScript agent framework
 - [@agentiny/anthropic](https://github.com/Keldrik/agentiny) - Anthropic Claude integration
 - [Claude 4.5](https://anthropic.com) - Frontier AI model for document intelligence
